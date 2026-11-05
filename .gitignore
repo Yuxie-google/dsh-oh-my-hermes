@@ -1,0 +1,10 @@
+.backups/
+node_modules/
+.preview/
+DEVELOPMENT.md
+.env
+.env.*
+*.tgz
+*.zip
+.DS_Store
+Thumbs.db

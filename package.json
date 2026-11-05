@@ -1,0 +1,66 @@
+{
+  "name": "dsh-oh-my-hermes",
+  "version": "1.9.4",
+  "type": "module",
+  "description": "Use a remote Hermes Agent as a dsh (DeepSeek Harness) model provider over SSH, with a visual settings page that discovers the remote's models and lets dsh switch them: per-host model rows, connection test, per-session resume, tool activity, token usage, streamed text.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "hermes",
+    "hermes-agent",
+    "llm",
+    "llm-provider",
+    "provider",
+    "ssh",
+    "remote",
+    "cordis"
+  ],
+  "main": "lib/index.js",
+  "icon": "icon.svg",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "README.md",
+    "CHANGELOG.md",
+    "THIRD-PARTY-NOTICES.txt",
+    "LICENSE",
+    "icon.svg",
+    "cordis.patch.yml"
+  ],
+  "engines": {
+    "node": ">=22.15.0",
+    "dsh": ">=0.2.0-rc.1 <0.3.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check lib/index.js && node --check lib/client.js && node --check lib/redact.js && node --check lib/commands.js && node --check lib/profiles.js && node --check lib/skills.js && node --check lib/tool-display.js"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuxie-google/dsh-oh-my-hermes.git"
+  },
+  "homepage": "https://github.com/Yuxie-google/dsh-oh-my-hermes#readme",
+  "bugs": {
+    "url": "https://github.com/Yuxie-google/dsh-oh-my-hermes/issues"
+  }
+}
