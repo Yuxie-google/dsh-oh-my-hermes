@@ -9,7 +9,7 @@
 <p><em>Connect to remote Hermes over SSH and use its models, profiles, skills and tools from your DSH conversation.</em></p>
 
 <p>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.9.4-6366f1" alt="Version 1.9.4" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.10.0-6366f1" alt="Version 1.10.0" /></a>
   <img src="https://img.shields.io/badge/host-dsh-5368d5" alt="Host: DeepSeek Harness" />
   <img src="https://img.shields.io/badge/agent-Hermes-374151" alt="Agent: Hermes" />
   <img src="https://img.shields.io/badge/transport-SSH-0f766e" alt="Transport: SSH" />
@@ -51,7 +51,7 @@ The server uses Node.js built-in modules. The frontend reuses DSH's React runtim
 git clone https://github.com/Yuxie-google/dsh-oh-my-hermes.git
 cd dsh-oh-my-hermes
 npm pack
-dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.9.4.tgz
+dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.10.0.tgz
 ```
 
 Restart DSH, open **Settings → 远程 Hermes**, and add your SSH host. The plugin does not ship with a real server address. Test the connection, add model rows and save the configuration.
@@ -91,6 +91,10 @@ These commands do not call a model. Skill discovery uses SSH; the other commands
 Resetting a mapping preserves DSH history and the original remote session. Active or queued conversations must stop before their mappings can be reset.
 
 ## Tool presentation and session continuity
+
+Selecting a Hermes model enables a scoped reading layout for assistant Markdown: a sans-serif font, a bounded desktop line width, and consistent spacing for paragraphs, headings, lists, tables, quotes and code. The layout respects the host's content font size and code highlighting. Tables and code can scroll on narrow screens. User messages and conversations with another provider selected retain the host's styles.
+
+This is a presentation change only: original text, copied content and stored history remain intact. Existing Hermes conversations can use the layout; plain paragraphs are not rewritten into tables.
 
 Remote tool calls and results become read-only Markdown blocks. Details are collapsed by default and can be opened with a click, Enter or Space. Commands and output retain line breaks and indentation; long bodies are truncated with a notice.
 

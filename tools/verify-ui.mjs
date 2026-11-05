@@ -52,7 +52,7 @@ adapter.storeFor('demo').set('demo:conversation-123', { session: 'remote-123', m
 const html = `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
 body{margin:0;background:#fafafa;color:#202327;font:14px system-ui,sans-serif}main{max-width:960px;margin:32px auto;padding:16px;box-sizing:border-box}*{box-sizing:border-box}
 @media(prefers-color-scheme:dark){body{background:#191b1f;color:#e7e9ed;--dsw-alias-bg-base:#191b1f;--dsw-alias-bg-layer-1:#212429;--dsw-alias-label-primary:#e7e9ed;--dsw-alias-label-secondary:#b0b4be;--dsw-alias-label-tertiary:#a3a9b3;--dsw-alias-border-l2:#40454e}}
-.fixture-composer{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:min(900px,calc(100% - 32px));background:var(--dsw-alias-bg-base,#fff);border:1px solid var(--dsw-alias-border-l2,#e6e8eb);border-radius:24px;padding:14px 16px;box-shadow:0 4px 24px rgba(0,0,0,.05)}.fixture-draft{height:58px;color:#8b919b;font-size:15px}.fixture-controls{display:flex;align-items:center;gap:10px;min-width:0}.fixture-mode{font-size:13px;color:#626972;white-space:nowrap}.fixture-model{margin-left:auto;font-size:12px;color:#626972}@media(max-width:500px){.fixture-model{display:none}}main{padding-bottom:180px}.fixture_markdown{font-size:15px;line-height:1.7;min-width:0}.fixture_markdown .md-code-block{background:var(--dsw-alias-bg-layer-1,#f1f3f5);border-radius:8px;padding:12px;max-width:100%;overflow:auto}.fixture_markdown pre{margin:0;white-space:pre;font-size:12px}.fixture_markdown table{border-collapse:collapse;width:100%}.fixture_markdown th,.fixture_markdown td{border-bottom:1px solid var(--dsw-alias-border-l2,#ddd);padding:6px;text-align:left}</style><main><article id="tool-fixture" class="fixture_markdown" hidden></article><div id="hermes-feedback"></div><div id="root"></div></main><div class="fixture-composer"><div class="fixture-draft">发消息或创建任务，调用指令，@ 文件或对话</div><div class="fixture-controls"><span class="fixture-mode">＋</span><span class="fixture-mode">工作区内修改</span><div id="hermes-toolbar"></div><span class="fixture-model">coder · deepseek-v4.1-flash-1017</span></div></div><script src="/react.js"></script><script src="/react-dom.js"></script><script>window.__ModuleLoader__={load(spec){const plugin=spec.factory(id=>{if(id==='react')return React;throw Error(id)});window.__hermesEvents={};window.__hermesRoute={provider:'deepseek',model:'chat'};window.__hermesSubscribers=new Set();window.__hermesDraft='已有任务';window.__selectHermesRoute=(route)=>{window.__hermesRoute=route;for(const fn of window.__hermesSubscribers)fn()};window.__hermesDisposers=[];plugin.apply({effect(fn){const stop=fn();if(typeof stop==='function')window.__hermesDisposers.push(stop)},modelDirectories:{directoryFor(){return {store:{getSnapshot:()=>({current:window.__hermesRoute}),subscribe(fn){window.__hermesSubscribers.add(fn);return ()=>window.__hermesSubscribers.delete(fn)}}}}},on(name,fn){(window.__hermesEvents[name]??=[]).push(fn)},slots:{inject(_,fn){fn()},register(spec,Component){const dock=spec.name==='conversation.input.dock';const toolbar=spec.name==='conversation.input.left';const root=ReactDOM.createRoot(document.getElementById(toolbar?'hermes-toolbar':dock?'hermes-feedback':'root'));if(dock||toolbar){window.__hermesRoots??=[];window.__hermesRoots.push({root,Component});window.__renderHermesDock=(sessionId)=>{window.__dockSession=sessionId;for(const {root,Component}of window.__hermesRoots)root.render(React.createElement(Component,{sessionId,useInput:selector=>selector({draft:window.__hermesDraft}),inputActions:{setDraft(value){window.__hermesDraft=value;window.__renderHermesDock(window.__dockSession)}}}))};window.__renderHermesDock('ui-chat')}else root.render(React.createElement(Component,{}))}}})}};</script><script src="/client.js"></script></html>`
+.fixture-composer{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:min(900px,calc(100% - 32px));background:var(--dsw-alias-bg-base,#fff);border:1px solid var(--dsw-alias-border-l2,#e6e8eb);border-radius:24px;padding:14px 16px;box-shadow:0 4px 24px rgba(0,0,0,.05)}.fixture-draft{height:58px;color:#8b919b;font-size:15px}.fixture-controls{display:flex;align-items:center;gap:10px;min-width:0}.fixture-mode{font-size:13px;color:#626972;white-space:nowrap}.fixture-model{margin-left:auto;font-size:12px;color:#626972}@media(max-width:500px){.fixture-model{display:none}}main{padding-bottom:180px}.fixture_markdown{font-size:15px;line-height:1.7;min-width:0}.fixture_markdown .md-code-block{background:var(--dsw-alias-bg-layer-1,#f1f3f5);border-radius:8px;padding:12px;max-width:100%;overflow:auto}.fixture_markdown pre{margin:0;white-space:pre;font-size:12px}.fixture_markdown table{border-collapse:collapse;width:100%}.fixture_markdown th,.fixture_markdown td{border-bottom:1px solid var(--dsw-alias-border-l2,#ddd);padding:6px;text-align:left}</style><main><div id="reading-flow" data-chat-flow-kind="assistant-step"><article id="tool-fixture" class="fixture_markdown" hidden></article></div><div id="reading-user" data-chat-flow-kind="user" hidden><article class="fixture_markdown"><p>用户消息保持宿主样式。</p></article></div><div id="hermes-feedback"></div><div id="root"></div></main><div class="fixture-composer"><div class="fixture-draft">发消息或创建任务，调用指令，@ 文件或对话</div><div class="fixture-controls"><span class="fixture-mode">＋</span><span class="fixture-mode">工作区内修改</span><div id="hermes-toolbar"></div><span class="fixture-model">coder · deepseek-v4.1-flash-1017</span></div></div><script src="/react.js"></script><script src="/react-dom.js"></script><script>window.__ModuleLoader__={load(spec){const plugin=spec.factory(id=>{if(id==='react')return React;throw Error(id)});window.__hermesEvents={};window.__hermesRoute={provider:'deepseek',model:'chat'};window.__hermesSubscribers=new Set();window.__hermesDraft='已有任务';window.__selectHermesRoute=(route)=>{window.__hermesRoute=route;for(const fn of window.__hermesSubscribers)fn()};window.__hermesDisposers=[];plugin.apply({effect(fn){const stop=fn();if(typeof stop==='function')window.__hermesDisposers.push(stop)},modelDirectories:{directoryFor(){return {store:{getSnapshot:()=>({current:window.__hermesRoute}),subscribe(fn){window.__hermesSubscribers.add(fn);return ()=>window.__hermesSubscribers.delete(fn)}}}}},on(name,fn){(window.__hermesEvents[name]??=[]).push(fn)},slots:{inject(_,fn){fn()},register(spec,Component){const dock=spec.name==='conversation.input.dock';const toolbar=spec.name==='conversation.input.left';const root=ReactDOM.createRoot(document.getElementById(toolbar?'hermes-toolbar':dock?'hermes-feedback':'root'));if(dock||toolbar){window.__hermesRoots??=[];window.__hermesRoots.push({root,Component});window.__renderHermesDock=(sessionId)=>{window.__dockSession=sessionId;for(const {root,Component}of window.__hermesRoots)root.render(React.createElement(Component,{sessionId,useInput:selector=>selector({draft:window.__hermesDraft}),inputActions:{setDraft(value){window.__hermesDraft=value;window.__renderHermesDock(window.__dockSession)}}}))};window.__renderHermesDock('ui-chat')}else root.render(React.createElement(Component,{}))}}})}};</script><script src="/client.js"></script></html>`
 const server = createServer((req, res) => {
   if (req.url.startsWith('/dsh-oh-my-hermes/')) return handler(req, res)
   const paths = { '/react.js': '.preview/react.js', '/react-dom.js': '.preview/react-dom.js', '/client.js': 'lib/client.js' }
@@ -331,10 +331,54 @@ try {
   assert.equal(await toolArea.locator('[data-hermes-tool]').count(), 0)
   await page.evaluate((html) => {document.getElementById('tool-fixture').innerHTML=html}, partialHtml)
   await toolArea.locator('[data-hermes-tool="closed"]').waitFor()
+  // Reading layout applies only while a Hermes model is selected, to assistant content.
+  await page.setViewportSize({ width: 1100, height: 1000 })
+  const readingMarkdown = [
+    '## 服务检查结果\n\n项目已在运行，服务检查完成。下面是本次检查的结果和访问方式。',
+    '前端服务、后端接口、数据库、缓存和后台任务均已检查。访问前请建立本地连接，然后打开浏览器。这里保留一段较长的普通正文，用于验证没有 Markdown 列表时的字体、行宽与段落间距。优化只改变阅读样式，原始文字与标点保持不变。',
+    '### 服务状态\n\n| 服务 | 地址 | 状态 |\n|---|---|---|\n| 前端 | \x60http://localhost:5173\x60 | 正常 |\n| API | \x60http://localhost:8000/health\x60 | 200 |\n| 数据库 | \x60127.0.0.1:5432\x60 | healthy |',
+    '### 访问步骤\n\n1. 在终端建立 SSH 隧道。\n2. 在浏览器打开本地地址。\n3. 使用自己的账户登录。',
+    '~~~bash\nssh -N -L 5173:127.0.0.1:5173 user@example.test\nprintf "line 1\\n  line 2\\n"\n~~~',
+    '配置路径为 \x60/srv/example/config.yaml\x60。更长的路径也应在窄屏中保持可读：\x60/srv/example/projects/long-project-name/configuration/development/settings.yaml\x60。',
+    '> 补充说明：已经运行的服务无需重复启动。',
+    formatToolResult({ name: 'terminal', duration_ms: 2340, output: 'API 200\n  database: healthy\n  cache: healthy' }),
+  ].join('\n\n').replaceAll('\x60', String.fromCharCode(96))
+  await page.addStyleTag({ content: '.fixture_markdown{font-family:"Times New Roman",serif}' })
+  await page.evaluate((html) => { document.getElementById('tool-fixture').innerHTML=html;document.getElementById('reading-user').hidden=false;window.scrollTo(0,0) }, renderMarkdown(readingMarkdown))
+  const prose = toolArea.locator('p').nth(1)
+  const originalText = await prose.textContent()
+  const originalFont = await prose.evaluate((el) => getComputedStyle(el).fontFamily)
+  assert.match(originalFont, /Times New Roman/)
+  const readingCommand = await toolArea.locator('pre code').first().textContent()
+  await selectRoute(coderModel)
+  await page.waitForFunction(() => document.body.hasAttribute('data-hermes-reading'))
+  const appearance = await prose.evaluate((el) => { const s=getComputedStyle(el),root=el.closest('[class*="_markdown"]');return {font:s.fontFamily,line:parseFloat(s.lineHeight),fontSize:parseFloat(s.fontSize),margin:parseFloat(s.marginBottom),width:root.getBoundingClientRect().width} })
+  assert.match(appearance.font, /Segoe UI/)
+  assert.ok(appearance.line >= appearance.fontSize * 1.8)
+  assert.ok(appearance.margin >= appearance.fontSize * .9)
+  assert.ok(appearance.width < 800, 'desktop prose is limited to a comfortable reading width')
+  assert.equal(await prose.textContent(), originalText)
+  assert.equal(await toolArea.locator('pre code').first().textContent(), readingCommand)
+  assert.equal(await page.locator('#reading-user p').evaluate((el) => getComputedStyle(el).fontFamily), originalFont)
+  await toolArea.locator('p[data-hermes-tool]').waitFor()
+  await toolArea.locator('p[data-hermes-tool]').click()
+  await toolArea.screenshot({ path: '.preview/reading-desktop.png' })
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await toolArea.screenshot({ path: '.preview/reading-dark.png' })
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.setViewportSize({ width: 390, height: 844 })
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'reading layout has no narrow-screen overflow')
+  await toolArea.screenshot({ path: '.preview/reading-mobile.png' })
+  await selectRoute('chat', 'deepseek')
+  await page.waitForFunction(() => !document.body.hasAttribute('data-hermes-reading'))
+  assert.equal(await prose.evaluate((el) => getComputedStyle(el).fontFamily), originalFont)
+  assert.equal(await prose.textContent(), originalText, 'provider changes never rewrite message text')
   await page.evaluate(() => { for(const stop of window.__hermesDisposers)stop() })
+  assert.equal(await page.locator('style[data-hermes-reading-style]').count(), 0)
+  assert.equal(await page.evaluate(() => document.body.hasAttribute('data-hermes-reading')), false)
   assert.equal(await toolArea.locator('[data-hermes-tool]').count(), 0, 'unload removes folding and reveals original Markdown')
   assert.deepEqual(errors, [])
-  console.log('Browser checks passed: tool Markdown folding, keyboard, whitespace, prose isolation, history remount and cleanup; live profile skill catalog, search, draft insertion, stale response isolation, empty/error/retry, profile/model dropdowns, stable route ids, command feedback, profile creation, and desktop/mobile/dark rendering.')
+  console.log('Browser checks passed: scoped assistant reading layout, fonts, line width, prose/code preservation and provider isolation; tool Markdown folding, keyboard, whitespace, prose isolation, history remount and cleanup; live profile skill catalog, search, draft insertion, stale response isolation, empty/error/retry, profile/model dropdowns, stable route ids, command feedback, profile creation, and desktop/mobile/dark rendering.')
   console.log(resolve('.preview/settings-desktop.png'))
 } catch (error) {
   await page?.screenshot({ path: '.preview/ui-failure.png', fullPage: true })

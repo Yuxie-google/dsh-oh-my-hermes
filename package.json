@@ -1,6 +1,6 @@
 {
   "name": "dsh-oh-my-hermes",
-  "version": "1.9.4",
+  "version": "1.10.0",
   "type": "module",
   "description": "Use a remote Hermes Agent as a dsh (DeepSeek Harness) model provider over SSH, with a visual settings page that discovers the remote's models and lets dsh switch them: per-host model rows, connection test, per-session resume, tool activity, token usage, streamed text.",
   "keywords": [

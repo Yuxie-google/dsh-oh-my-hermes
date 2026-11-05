@@ -9,7 +9,7 @@
 <p><em>通过 SSH 连接远端 Hermes，复用已有模型、身份、技能与工具，在 DSH 中完成对话与操作。</em></p>
 
 <p>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.9.4-6366f1" alt="Version 1.9.4" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.10.0-6366f1" alt="Version 1.10.0" /></a>
   <img src="https://img.shields.io/badge/host-dsh-5368d5" alt="Host: DeepSeek Harness" />
   <img src="https://img.shields.io/badge/agent-Hermes-374151" alt="Agent: Hermes" />
   <img src="https://img.shields.io/badge/transport-SSH-0f766e" alt="Transport: SSH" />
@@ -64,7 +64,7 @@ dsh agent loop
 git clone https://github.com/Yuxie-google/dsh-oh-my-hermes.git
 cd dsh-oh-my-hermes
 npm pack
-dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.9.4.tgz
+dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.10.0.tgz
 ```
 
 安装后 `package.json` 的 `dsh.profile.bundles` 会多出 `dsh-oh-my-hermes`，**重启 dsh** 生效。
@@ -120,6 +120,10 @@ dsh plugin --profile desktop remove dsh-oh-my-hermes
 **多主机**：`hosts` 里每一项都会变成模型选择器里一个独立的 provider（`id` 不能重复），一个插件实例可以同时挂几台机器，各自有各自的模型行。
 
 ## 消息流与工具展示
+
+选择 Hermes 模型时，对话中的助手正文启用阅读样式：使用无衬线字体、限制桌面行宽，并统一段落、标题、列表、表格、引用及代码的间距。窄屏下表格和代码可横向滚动，保留宿主代码高亮及字体大小设置。用户消息和其它提供方对话不启用这套样式。
+
+此调整只影响显示，不修改原始回复、复制内容或历史存储。已有 Hermes 对话也可应用阅读样式；普通段落不会被自动改写成表格。
 
 Hermes 的 `--format stream-json` 是**换行分隔的 JSON 帧**，插件把它翻译成 dsh 的 `StreamChunk`：
 
