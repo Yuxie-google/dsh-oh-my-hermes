@@ -356,19 +356,81 @@ try {
   assert.match(appearance.font, /Segoe UI/)
   assert.ok(appearance.line >= appearance.fontSize * 1.8)
   assert.ok(appearance.margin >= appearance.fontSize * .9)
-  assert.ok(appearance.width < 800, 'desktop prose is limited to a comfortable reading width')
+  assert.ok(appearance.width > 900, 'assistant Markdown fills the existing host column instead of a second 84ch cap')
   assert.equal(await prose.textContent(), originalText)
   assert.equal(await toolArea.locator('pre code').first().textContent(), readingCommand)
   assert.equal(await page.locator('#reading-user p').evaluate((el) => getComputedStyle(el).fontFamily), originalFont)
   await toolArea.locator('p[data-hermes-tool]').waitFor()
   await toolArea.locator('p[data-hermes-tool]').click()
+  // Reproduce the installed host's column/composer tokens, including its ResizeObserver
+  // input and wide-table rules. Check container resizing without changing the viewport.
+  await page.addStyleTag({ content: `
+    main{max-width:none!important;padding:0!important}
+    .fixture-host-frame{width:calc(100% - var(--fixture-side,0px));margin-inline:auto;min-width:0;container-type:inline-size;--dsh-chat-content-width:var(--dsh-chat-user-width,clamp(680px,calc(var(--dsh-conversation-column-width,0px) * .64),920px));--dsh-composer-card-max-width:calc(var(--dsh-chat-content-width) + 32px);--dsh-composer-side-clearance:16px;--dsh-composer-dock-inset:8px}
+    .fixture-host-scroll{padding:16px 32px;min-width:0;container-type:inline-size}
+    .fixture-host-column{max-width:var(--dsh-chat-content-width);width:100%;margin:0 auto;display:flex;flex-direction:column;min-width:0}
+    .fixture-host-column .md-table-wide{--dsh-table-spare:max(0px,calc((100cqw - var(--dsh-chat-content-width)) / 2));--dsh-table-lead:calc(var(--dsh-table-spare) + min(var(--dsh-chat-content-width),100cqw) - 100%);box-sizing:border-box;width:calc(100% + var(--dsh-table-lead) + var(--dsh-table-spare));max-width:none;margin-left:calc(-1 * var(--dsh-table-lead));padding-left:var(--dsh-table-lead)}
+    .fixture-host-card{box-sizing:border-box;width:calc(100% - 32px);max-width:var(--dsh-composer-card-max-width);margin:12px auto;padding:16px;border:1px solid var(--dsw-alias-border-l2,#ddd);border-radius:24px;background:var(--dsw-alias-bg-base,#fff);font:14px system-ui;color:var(--dsw-alias-label-secondary,#626972)}
+    .fixture-host-card p{margin:0 0 36px}.fixture-host-card-footer{display:flex;justify-content:space-between;gap:12px}
+    @media(prefers-color-scheme:dark){.fixture-host-card{--dsw-alias-bg-base:#191b1f}}
+  ` })
+  await page.evaluate(() => {
+    const frame=document.createElement('div');frame.className='fixture-host-frame';frame.innerHTML='<div class="fixture-host-scroll"><div class="fixture-host-column"></div></div><div class="fixture-host-dock"></div><div class="fixture-host-card"><p>发消息或创建任务，调用指令，@ 文件或对话</p><div class="fixture-host-card-footer"><span>＋ 工作区内修改 · 技能</span><span>coder · 默认模型</span></div></div>'
+    const flow=document.getElementById('reading-flow');flow.before(frame);frame.querySelector('.fixture-host-column').append(flow)
+    const feedback=document.getElementById('hermes-feedback');frame.querySelector('.fixture-host-dock').append(feedback);feedback.hidden=false
+    const table=flow.querySelector('table'),wide=document.createElement('div');wide.className='md-table-wide';table.before(wide);wide.append(table)
+    window.__readingHostObserver=new ResizeObserver(([entry])=>frame.style.setProperty('--dsh-conversation-column-width',entry.contentRect.width+'px'));window.__readingHostObserver.observe(frame)
+    const code=flow.querySelector('pre code');code.textContent+='\n'+('very_long_shell_argument_'.repeat(25))
+  })
+  const hostFrame = page.locator('.fixture-host-frame')
+  const assertHostLayout = async () => {
+    await page.waitForFunction(() => {const frame=document.querySelector('.fixture-host-frame');return Math.abs(parseFloat(frame.style.getPropertyValue('--dsh-conversation-column-width'))-frame.getBoundingClientRect().width)<1})
+    const dimensions = await page.evaluate(() => {
+      const frame=document.querySelector('.fixture-host-frame').getBoundingClientRect(),column=document.querySelector('.fixture-host-column').getBoundingClientRect(),text=document.getElementById('tool-fixture').getBoundingClientRect(),card=document.querySelector('.fixture-host-card').getBoundingClientRect(),feedback=document.querySelector('.hermes-command-feedback').getBoundingClientRect(),pre=document.querySelector('#tool-fixture pre')
+      const table=document.querySelector('#tool-fixture table')
+      return {frame:frame.width,column:column.width,text:text.width,textLeft:text.x,card:card.width,cardLeft:card.x,feedback:feedback.width,feedbackCenter:feedback.x+feedback.width/2,center:frame.x+frame.width/2,bodyOverflow:document.documentElement.scrollWidth>innerWidth,codeScrollable:pre.scrollWidth>pre.clientWidth,tableScrollable:table.scrollWidth>table.clientWidth,wideWidth:document.querySelector('.md-table-wide').getBoundingClientRect().width,wideMargin:getComputedStyle(document.querySelector('.md-table-wide')).marginLeft}
+    })
+    assert.ok(Math.abs(dimensions.text-dimensions.column)<1, 'assistant content follows the native column width')
+    assert.ok(Math.abs(dimensions.card-(dimensions.column+32))<1, 'composer and chat keep the native 16px inset on each side')
+    assert.ok(Math.abs(dimensions.textLeft-dimensions.cardLeft-16)<1)
+    assert.ok(Math.abs(dimensions.feedbackCenter-dimensions.center)<1, 'command dock is centered on the host composer')
+    assert.ok(Math.abs(dimensions.feedback-(dimensions.column+16))<1, 'command dock uses host width tokens')
+    assert.equal(dimensions.bodyOverflow,false)
+    assert.equal(dimensions.codeScrollable,true, 'long code scrolls inside the code block')
+    if(dimensions.frame<400) assert.equal(dimensions.tableScrollable,true, 'narrow tables scroll without squeezing their labels')
+    return dimensions
+  }
+  const widths=[]
+  for (const width of [1920,1366,900,390]) {
+    await page.setViewportSize({width,height:1000})
+    const metrics=await assertHostLayout();widths.push(metrics.text)
+    if(width===1920){assert.ok(metrics.text>900);assert.ok(metrics.wideWidth>metrics.text+200,'host wide-table breakout remains available');assert.ok(parseFloat(metrics.wideMargin)<0)}
+  }
+  assert.ok(widths[0]>widths[1]&&widths[1]>widths[2]&&widths[2]>widths[3], 'window changes produce different content widths')
+  await page.setViewportSize({width:1920,height:1000})
+  await hostFrame.evaluate(el=>el.style.setProperty('--dsh-chat-user-width','1120px'))
+  const customWidth=await assertHostLayout();assert.ok(Math.abs(customWidth.text-1120)<1,'native user width preference is respected')
+  await hostFrame.evaluate(el=>el.style.removeProperty('--dsh-chat-user-width'))
+  const wideWindow=await assertHostLayout()
+  await hostFrame.evaluate(el=>el.style.setProperty('--fixture-side','720px'))
+  const withSidebar=await assertHostLayout();assert.ok(withSidebar.text<wideWindow.text-100,'opening a side panel shrinks content without changing the viewport')
+  await hostFrame.evaluate(el=>el.style.setProperty('--fixture-side','1530px'))
+  const embeddedNarrow=await assertHostLayout();assert.ok(embeddedNarrow.text<350,'narrow embedded pane works inside a wide window')
+  await hostFrame.screenshot({path:'.preview/reading-embedded-narrow.png'})
+  await hostFrame.evaluate(el=>el.style.removeProperty('--fixture-side'))
+  await page.setViewportSize({width:1366,height:1000});await assertHostLayout()
+  await page.locator('#hermes-feedback').evaluate(el=>el.hidden=true)
+  await hostFrame.screenshot({path:'.preview/reading-responsive-desktop.png'})
   await toolArea.screenshot({ path: '.preview/reading-desktop.png' })
   await page.emulateMedia({ colorScheme: 'dark' })
   await toolArea.screenshot({ path: '.preview/reading-dark.png' })
+  await hostFrame.screenshot({path:'.preview/reading-responsive-dark.png'})
   await page.emulateMedia({ colorScheme: 'light' })
   await page.setViewportSize({ width: 390, height: 844 })
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'reading layout has no narrow-screen overflow')
   await toolArea.screenshot({ path: '.preview/reading-mobile.png' })
+  await hostFrame.screenshot({path:'.preview/reading-responsive-mobile.png'})
+  await page.evaluate(()=>window.__readingHostObserver.disconnect())
   await selectRoute('chat', 'deepseek')
   await page.waitForFunction(() => !document.body.hasAttribute('data-hermes-reading'))
   assert.equal(await prose.evaluate((el) => getComputedStyle(el).fontFamily), originalFont)
@@ -378,7 +440,7 @@ try {
   assert.equal(await page.evaluate(() => document.body.hasAttribute('data-hermes-reading')), false)
   assert.equal(await toolArea.locator('[data-hermes-tool]').count(), 0, 'unload removes folding and reveals original Markdown')
   assert.deepEqual(errors, [])
-  console.log('Browser checks passed: scoped assistant reading layout, fonts, line width, prose/code preservation and provider isolation; tool Markdown folding, keyboard, whitespace, prose isolation, history remount and cleanup; live profile skill catalog, search, draft insertion, stale response isolation, empty/error/retry, profile/model dropdowns, stable route ids, command feedback, profile creation, and desktop/mobile/dark rendering.')
+  console.log('Browser checks passed: native responsive column/composer alignment at 1920/1366/900/390px, custom host width, sidebar and embedded-pane resizing, wide tables and contained code/table scrolling; scoped reading, provider isolation, tool folding, skill/profile flows and light/dark rendering.')
   console.log(resolve('.preview/settings-desktop.png'))
 } catch (error) {
   await page?.screenshot({ path: '.preview/ui-failure.png', fullPage: true })

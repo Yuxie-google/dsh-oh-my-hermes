@@ -9,7 +9,7 @@
 <p><em>Connect to remote Hermes over SSH and use its models, profiles, skills and tools from your DSH conversation.</em></p>
 
 <p>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.10.0-6366f1" alt="Version 1.10.0" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.10.1-6366f1" alt="Version 1.10.1" /></a>
   <img src="https://img.shields.io/badge/host-dsh-5368d5" alt="Host: DeepSeek Harness" />
   <img src="https://img.shields.io/badge/agent-Hermes-374151" alt="Agent: Hermes" />
   <img src="https://img.shields.io/badge/transport-SSH-0f766e" alt="Transport: SSH" />
@@ -51,7 +51,7 @@ The server uses Node.js built-in modules. The frontend reuses DSH's React runtim
 git clone https://github.com/Yuxie-google/dsh-oh-my-hermes.git
 cd dsh-oh-my-hermes
 npm pack
-dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.10.0.tgz
+dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.10.1.tgz
 ```
 
 Restart DSH, open **Settings → 远程 Hermes**, and add your SSH host. The plugin does not ship with a real server address. Test the connection, add model rows and save the configuration.
@@ -92,7 +92,7 @@ Resetting a mapping preserves DSH history and the original remote session. Activ
 
 ## Tool presentation and session continuity
 
-Selecting a Hermes model enables a scoped reading layout for assistant Markdown: a sans-serif font, a bounded desktop line width, and consistent spacing for paragraphs, headings, lists, tables, quotes and code. The layout respects the host's content font size and code highlighting. Tables and code can scroll on narrow screens. User messages and conversations with another provider selected retain the host's styles.
+Selecting a Hermes model enables a scoped reading layout for assistant Markdown: a sans-serif font and consistent spacing for paragraphs, headings, lists, tables, quotes and code. Content follows DSH's native chat column and user width preference as the window, sidebar or embedded pane changes; the plugin adds no fixed character-width cap. Native wide-table layout is preserved, and long code and narrow-pane tables scroll within their own regions. Command feedback uses the host's composer width tokens for alignment. The layout respects the host's content font size and code highlighting. User messages and conversations with another provider selected retain the host's styles.
 
 This is a presentation change only: original text, copied content and stored history remain intact. Existing Hermes conversations can use the layout; plain paragraphs are not rewritten into tables.
 

@@ -9,7 +9,7 @@
 <p><em>通过 SSH 连接远端 Hermes，复用已有模型、身份、技能与工具，在 DSH 中完成对话与操作。</em></p>
 
 <p>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.10.0-6366f1" alt="Version 1.10.0" /></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.10.1-6366f1" alt="Version 1.10.1" /></a>
   <img src="https://img.shields.io/badge/host-dsh-5368d5" alt="Host: DeepSeek Harness" />
   <img src="https://img.shields.io/badge/agent-Hermes-374151" alt="Agent: Hermes" />
   <img src="https://img.shields.io/badge/transport-SSH-0f766e" alt="Transport: SSH" />
@@ -64,7 +64,7 @@ dsh agent loop
 git clone https://github.com/Yuxie-google/dsh-oh-my-hermes.git
 cd dsh-oh-my-hermes
 npm pack
-dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.10.0.tgz
+dsh plugin --profile desktop add ./dsh-oh-my-hermes-1.10.1.tgz
 ```
 
 安装后 `package.json` 的 `dsh.profile.bundles` 会多出 `dsh-oh-my-hermes`，**重启 dsh** 生效。
@@ -121,7 +121,7 @@ dsh plugin --profile desktop remove dsh-oh-my-hermes
 
 ## 消息流与工具展示
 
-选择 Hermes 模型时，对话中的助手正文启用阅读样式：使用无衬线字体、限制桌面行宽，并统一段落、标题、列表、表格、引用及代码的间距。窄屏下表格和代码可横向滚动，保留宿主代码高亮及字体大小设置。用户消息和其它提供方对话不启用这套样式。
+选择 Hermes 模型时，对话中的助手正文启用阅读样式：使用无衬线字体，并统一段落、标题、列表、表格、引用及代码的间距。宽度沿用 DSH 原生聊天列及手动宽度设置，随窗口、侧栏和嵌入面板变化，不再叠加固定字符行宽。保留宿主宽表格布局；窄面板下表格和长代码在各自区域横向滚动，命令结果卡片使用宿主输入框的宽度变量对齐。保留宿主代码高亮及字体大小设置，用户消息和其它提供方对话不启用这套阅读样式。
 
 此调整只影响显示，不修改原始回复、复制内容或历史存储。已有 Hermes 对话也可应用阅读样式；普通段落不会被自动改写成表格。
 
