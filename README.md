@@ -1,12 +1,19 @@
-# dsh-oh-my-hermes
+# Oh My Hermes for DeepSeek Harness
 
 ![Hermes icon](icon.svg)
 
-把 **远程主机上的 Hermes Agent** 接成 dsh（DeepSeek Harness）的模型提供方。
+**通过 SSH 将远程 Hermes Agent 集成到 DeepSeek Harness。**
 
 当前版本 **1.9.4**。改动和升级注意事项见 [CHANGELOG.md](CHANGELOG.md)。
 
-选它之后，这一轮消息走 SSH 交给那台机器上已装好的 Hermes，由它用自己的系统提示、工具、技能、记忆跑完，回答以流式文本回到 dsh。dsh 只负责收发和存会话。
+Oh My Hermes 是 DeepSeek Harness（DSH）的模型提供方插件，包名为 `dsh-oh-my-hermes`。用户可在 DSH 对话界面中选择远程 Hermes 身份与模型、浏览可用技能，并查看流式回答和工具执行过程。
+
+请求通过 SSH 发送至远端 Hermes Agent。模型调用、工具执行、技能加载与记忆管理均在远端完成；插件负责消息传输、结果展示及会话续接。
+
+- **多主机与多模型**：在设置页管理 SSH 主机，读取远端模型目录并配置对话中的可选模型。
+- **身份管理**：创建、复制和绑定原生 Hermes profile，为不同身份维护独立的续接关系。
+- **技能入口**：按当前身份读取技能目录，支持搜索及将技能使用提示加入输入框。
+- **工具过程展示**：以可折叠摘要展示工具调用与结果，保留命令、输出换行、执行状态和耗时。
 
 ```
 dsh agent loop
@@ -16,7 +23,7 @@ dsh agent loop
              └─ Hermes Agent（远端：它自己的模型、工具、技能、记忆）
 ```
 
-## 它做了什么
+## 功能与协议映射
 
 | 方向 | 映射 |
 |---|---|
@@ -29,9 +36,9 @@ dsh agent loop
 | 取消 | 中断信号 → 杀掉本地 ssh，立即以 `aborted` 收尾 |
 | 超时 | 总时长（默认 30 分钟）与静默（默认 10 分钟）双保险，超时即杀 |
 
-设计上刻意保持：**零运行时依赖**（只用 `node:` 内置模块），不 import `@deepseek-ai/*`，adapter 是按 `dsh-llm` 实际调用的七个方法做的鸭子类型对象，所以在任何 dsh 布局下都能加载。
+服务端仅依赖 Node.js 内置模块，通过适配器实现 DSH 的模型提供方接口；前端复用宿主提供的 React 和界面插槽，无需额外构建。
 
-## 安装
+## 安装与卸载
 
 ```powershell
 git clone https://github.com/Yuxie-google/dsh-oh-my-hermes.git
@@ -50,7 +57,7 @@ dsh plugin --profile desktop remove dsh-oh-my-hermes
 
 首次安装后先打开「设置 → 远程 Hermes」添加 SSH 主机；安装包不附带任何真实服务器地址。开发与验证说明见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 配置
+## 配置说明
 
 配置写在插件自带的 [cordis.patch.yml](cordis.patch.yml)；也可以在自己的 profile 的 `cordis.patch.yml` 里用同一个 `id: oh-my-hermes` 覆盖，这样升级插件不会冲掉设置：
 
@@ -92,7 +99,7 @@ dsh plugin --profile desktop remove dsh-oh-my-hermes
 
 **多主机**：`hosts` 里每一项都会变成模型选择器里一个独立的 provider（`id` 不能重复），一个插件实例可以同时挂几台机器，各自有各自的模型行。
 
-## 远端的一轮是怎么显示出来的
+## 消息流与工具展示
 
 Hermes 的 `--format stream-json` 是**换行分隔的 JSON 帧**，插件把它翻译成 dsh 的 `StreamChunk`：
 
@@ -112,7 +119,7 @@ Hermes 的 `--format stream-json` 是**换行分隔的 JSON 帧**，插件把它
 
 没见过的帧类型会**只警告一次**（`unhandled hermes frame "x"; stream-json schema may have changed`），这样 Hermes 协议变了会吭声而不是静默吞掉输出。
 
-## 对话框快捷指令
+## 对话快捷指令
 
 加载插件并重启 DSH 后，在对话输入框输入 `/hermes`，原生 `/` 菜单会列出：
 
@@ -136,7 +143,7 @@ Hermes 的 `--format stream-json` 是**换行分隔的 JSON 帧**，插件把它
 
 Hermes 指令完成后，输入框上方会显示本会话的「命令结果」卡片，成功和失败都会显示，包括尚未开始普通对话的新会话首页。卡片可关闭，只保留当前会话最近一次 Hermes 指令的即时结果；不会显示其它会话的输出。刷新页面后需重新执行指令。DSH 自己的命令日志仍由宿主保存。
 
-## 可视化设置页
+## 图形界面
 
 ### 对话中的技能入口
 
@@ -195,7 +202,7 @@ Hermes 指令完成后，输入框上方会显示本会话的「命令结果」�
 | `GET /dsh-oh-my-hermes/profiles?host=…` | 读取该主机的 profile 名称与活动标记；也可传 `sshHost` / `sshUser` 读取表单中的目标 |
 | `POST /dsh-oh-my-hermes/profiles` | JSON `{ host: { id 或 sshHost/sshUser/command }, name, cloneFrom?, description?, instructions? }`，创建并可选写入新身份的长期指令 |
 
-### 在本地切换远端模型
+### 远端模型切换
 
 远端每台机器的模型行就是「本地能选的模型」。在设置中点击「添加模型」，选择身份和远端模型后保存，即可在对话输入框选择这一行。候选模型来自 Hermes 的 `provider_models_cache.json`；也可以展开「批量添加远端模型」，点模型芯片一次添加多行。于是：
 
@@ -211,7 +218,7 @@ Hermes 指令完成后，输入框上方会显示本会话的「命令结果」�
 MODEL SWITCH OK
 ```
 
-## 状态文件
+## 会话状态与持久化
 
 `~/.dsh/oh-my-hermes/<provider>.json`：
 
@@ -225,7 +232,7 @@ MODEL SWITCH OK
 
 工具活动和诊断会隐藏已知本机环境变量密钥，以及常见的远端凭据字段、Bearer 令牌和 URL 密码。脱敏仅用于显示内容，不修改发给 Hermes 的提示词或实际工具操作；任意未标记的秘密字符串仍可能出现在输出中。
 
-## 错误
+## 错误处理
 
 远端失败会映射成带可读原因和错误码的 `finish.error`：
 
@@ -244,7 +251,7 @@ MODEL SWITCH OK
 | 当前选择的模型行已被移除 | `MODEL_NOT_CONFIGURED`（不会自动落到其它身份） |
 | 其它 | `PROVIDER_ERROR` |
 
-## 测试
+## 开发与测试
 
 ```powershell
 node --test tests/*.test.mjs           # 流式、配置、并发续接、取消、SSH、HTTP 权限与客户端注册
@@ -259,7 +266,7 @@ node tools/smoke-profiles.mjs          # 真机创建临时身份、写指令、
 
 可选浏览器回归：`node tools/verify-ui.mjs`。需要 Playwright（可用 `HERMES_PLAYWRIGHT_PATH` 指定模块位置）、marked（`HERMES_MARKED_PATH`），以及 `.preview/react.js`、`.preview/react-dom.js` 两份 React 18 UMD 文件；自定义浏览器可用 `HERMES_CHROMIUM_PATH` 指定可执行文件。脚本使用临时配置和假的 SSH 子进程，验证保存、连接、技能、工具 Markdown 折叠/键盘/历史重挂载/正文隔离、错误恢复及桌面、手机、深色截图，不连接真实远端。工具展示测试使用 marked 生成 Markdown DOM，匹配本机宿主的代码块结构；不等同于操作实际 DSH 窗口。
 
-## 已知限制
+## 适用范围与限制
 
 - **只搬文本**：图片、文件附件不会转发给远端；远端也看不到本地文件。
 - 远端的工具调用只以文本呈现，不是 dsh 的工具卡片，也无法在 dsh 里批准/拒绝。
@@ -267,7 +274,7 @@ node tools/smoke-profiles.mjs          # 真机创建临时身份、写指令、
 - 远端会话 id 只按 dsh 会话存；在 dsh 里"新建会话"会开一个全新的远端会话。
 - 不能替代本地 agent：远端用什么工具、什么模型、什么额度，全由那台机器决定。
 
-## License
+## 许可证与参考项目
 
 参考项目及其许可见 [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)。
 
