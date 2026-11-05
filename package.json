@@ -26,6 +26,7 @@
   "files": [
     "lib",
     "README.md",
+    "README.en.md",
     "CHANGELOG.md",
     "THIRD-PARTY-NOTICES.txt",
     "LICENSE",

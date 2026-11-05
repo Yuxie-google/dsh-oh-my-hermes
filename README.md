@@ -1,10 +1,30 @@
-# Oh My Hermes for DeepSeek Harness
+<div align="center">
 
-![Hermes icon](icon.svg)
+<h1><img src="icon.svg" width="40" height="40" alt="Hermes" /> Oh My Hermes</h1>
 
-**通过 SSH 将远程 Hermes Agent 集成到 DeepSeek Harness。**
+<p><strong>中文</strong> | <a href="README.en.md">English</a></p>
 
-当前版本 **1.9.4**。改动和升级注意事项见 [CHANGELOG.md](CHANGELOG.md)。
+<p><strong>Hermes Agent，集成于 DeepSeek Harness</strong></p>
+
+<p><em>通过 SSH 连接远端 Hermes，复用已有模型、身份、技能与工具，在 DSH 中完成对话与操作。</em></p>
+
+<p>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.9.4-6366f1" alt="Version 1.9.4" /></a>
+  <img src="https://img.shields.io/badge/host-dsh-5368d5" alt="Host: DeepSeek Harness" />
+  <img src="https://img.shields.io/badge/agent-Hermes-374151" alt="Agent: Hermes" />
+  <img src="https://img.shields.io/badge/transport-SSH-0f766e" alt="Transport: SSH" />
+  <img src="https://img.shields.io/badge/language-JavaScript-323330?logo=javascript&amp;logoColor=F7DF1E" alt="Language: JavaScript" />
+  <img src="https://img.shields.io/badge/runtime_deps-zero-16835d" alt="Runtime dependencies: zero" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2563eb" alt="License: MIT" /></a>
+</p>
+
+<p>欢迎提交 Issue 和 Pull Request。开发与验证请参阅 <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>。</p>
+
+</div>
+
+---
+
+## 项目概览
 
 Oh My Hermes 是 DeepSeek Harness（DSH）的模型提供方插件，包名为 `dsh-oh-my-hermes`。用户可在 DSH 对话界面中选择远程 Hermes 身份与模型、浏览可用技能，并查看流式回答和工具执行过程。
 
